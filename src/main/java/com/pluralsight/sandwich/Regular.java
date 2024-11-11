@@ -1,6 +1,8 @@
-package com.pluralsight;
+package com.pluralsight.sandwich;
 
-public class Regular implements Topping{
+import com.pluralsight.sandwich.Topping;
+
+public class Regular implements Topping {
     private String name;
     private double price;
 

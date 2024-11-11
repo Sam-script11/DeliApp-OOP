@@ -1,4 +1,6 @@
-package com.pluralsight;
+package com.pluralsight.sandwich;
+
+import com.pluralsight.sandwich.Topping;
 
 public class Premium implements Topping {
     private String name;
@@ -17,7 +19,7 @@ public class Premium implements Topping {
 
     @Override
     public boolean isPremium() {
-        return false;
+        return true;
     }
 
     @Override

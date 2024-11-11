@@ -24,4 +24,11 @@ public class Customer {
     public void setCustomerInfo(String customerInfo) {
         CustomerInfo = customerInfo;
     }
+
+    @Override
+    public String toString() {
+        return "" +
+                "name:'" + name + '\'' +
+                ", CustomerInfo: " + CustomerInfo + '\'';
+    }
 }
