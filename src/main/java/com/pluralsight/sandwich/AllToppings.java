@@ -31,9 +31,7 @@ public class AllToppings {
         cheeseType.add("Cheddar");
         cheeseType.add("Swiss");
 
-//        for (String cheese : cheeseType) {
-//            System.out.println(cheese);
-//        }
+
 
         veggies.add("lettuce");
         veggies.add("peppers");
@@ -44,10 +42,6 @@ public class AllToppings {
         veggies.add("pickles");
         veggies.add("guacamole");
         veggies.add("mushrooms");
-
-//        for (String veggy : veggies) {
-//            System.out.println(veggy);
-//        }
 
 
         sauces.add("Mayo");
@@ -87,6 +81,23 @@ public class AllToppings {
     public void displayVeggies() {
         for (int i = 0; i < this.veggies.size(); i++) {
             System.out.println(i+1 + ")" + this.veggies.get(i));
+        }
+    }
+    public void displaySauce(){
+        for (int i = 0; i < this.sauces.size(); i++) {
+            System.out.println(i+1 + ")" + this.sauces.get(i));
+        }
+    }
+
+    public void displayProtein(){
+        for (int i = 0; i<this.meatType.size(); i++){
+            System.out.println(i+1 + ")" + this.meatType.get(i));
+
+        }
+    }
+    public void dislayCheese(){
+        for (int i = 0; i<this.cheeseType.size(); i++){
+            System.out.println(i+1 + ")" + this.cheeseType.get(i));
         }
     }
 

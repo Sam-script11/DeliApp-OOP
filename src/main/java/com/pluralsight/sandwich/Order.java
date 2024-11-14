@@ -3,12 +3,9 @@ package com.pluralsight.sandwich;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 public class Order implements CalculatePrice {
     private int orderId;
-    private String customerName;
     private ArrayList<MenuItem> items;
     private double subtotal;
     private double taxRate;
@@ -28,9 +25,11 @@ public class Order implements CalculatePrice {
     public Order() {
         this.orderId = orderCounter++;
         this.items = new ArrayList<>();
-        this.taxRate = .2;
-        this.storeName = "Sams sandwich shop";
-        this.storeAddress = "12305 houston ave. ....";
+        this.taxRate = 1+.06245;
+        this.storeName = "Simply Sam’s Sandwich Society";
+        this.storeAddress = "543 Marie Curie Avenue\n" +
+                "Retroville, Tx 75449\n" +
+                "United States";
         DateEncapsulation();
     }
 
@@ -40,14 +39,6 @@ public class Order implements CalculatePrice {
 
     public void setOrderId(int orderId) {
         this.orderId = orderId;
-    }
-
-    public String getCustomerName() {
-        return customerName;
-    }
-
-    public void setCustomerName(String customerName) {
-        this.customerName = customerName;
     }
 
     public ArrayList<MenuItem> getItems() {
@@ -126,4 +117,16 @@ public class Order implements CalculatePrice {
         }
         return totalAmount;
     }
+
+    @Override
+    public String toString() {
+        return
+                "orderId=" + orderId +
+                ", subtotal=" + totalAmount +
+                ", taxRate: " + taxRate +"%"+
+                ", totalAmount:" + totalAmount + taxRate +
+                ", storeName: " + storeName + '\'' +
+                ", storeAddress='" + storeAddress + '\'' +
+                ", date=" + date +
+                ", formatter=" + formatter;}
 }

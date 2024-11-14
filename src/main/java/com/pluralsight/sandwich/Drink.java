@@ -56,10 +56,9 @@ public class Drink extends MenuItem implements CalculatePrice{
 
     @Override
     public String toString() {
-        return "Drink{" +
+        return "Drink:" +
                 "name='" + name + '\'' +
                 ", size='" + size + '\'' +
-                ", amount=" + amount +
-                '}';
+                ", amount=" + amount;
     }
 }

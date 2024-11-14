@@ -75,10 +75,8 @@ public class Sandwich extends MenuItem implements CalculatePrice{
         this.veggies = veggies;
     }
 
-    public void addToppings(CalculatePrice topping) {
-        // list for regular, premium, sides
-        //order--> list of drinks, and other things
-
+    public void setProtein(ArrayList <String> meats){
+       this.meats = meats;
     }
 
     public void removeTopping(CalculatePrice topping) {
@@ -222,13 +220,12 @@ double total = 0;
 
     @Override
     public String toString() {
-        return "Sandwich{" +
-                "size=" + size +
-                ", breadType='" + breadType + '\'' +
-                ", meats=" + meats +
-                ", cheese=" + cheese +
-                ", veggies=" + veggies +
-                ", isToasted=" + isToasted +
-                '}';
+        return "Sandwich:" +
+                "size:" + size +
+                ", breadType:'" + breadType + '\'' +
+                ", meats:" + meats +
+                ", cheese:" + cheese +
+                ", veggies:" + veggies +
+                ", isToasted:" + isToasted;
     }
 }
