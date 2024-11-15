@@ -1,52 +1,79 @@
 package com.pluralsight;
 import com.pluralsight.sandwich.*;
 
+import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
+import static com.pluralsight.sandwich.MenuItem.*;
+
 public class Main {
-    static final Scanner keyboard = new Scanner(System.in);
-    static final Map<String, Double> SandwichSizePrices = Map.of("4", 5.50, "8", 7.0, "12", 8.50);
-    static final Map<String,Double> drinkSizePrices = Map.of("Small",2.00,"Medium",2.50,"Large",3.00);
-    static  final AllToppings allToppings = new AllToppings();
+
+    // Scanner to capture user input
+    public static final Scanner keyboard = new Scanner(System.in);
+
+    // Map for sandwich sizes and their corresponding base prices
+    static final Map<String, Double> SandwichSizePrices = Map.of(
+            "4", 5.50,
+            "8", 7.0,
+            "12", 8.50
+    );
+
+    // Map for drink sizes and their corresponding prices
+    static final Map<String, Double> drinkSizePrices = Map.of(
+            "Small", 2.00,
+            "Medium", 2.50,
+            "Large", 3.00
+    );
+    // Instance of AllToppings to manage various topping options
+    static final AllToppings allToppings = new AllToppings();
+
+    // Instance of Sides for managing side options like chips
     static final Sides allsides = new Sides();
-    static List<String> drinksFlavors = Arrays.asList( "Coca-Cola", "Diet Coke", "Sprite", "Dr Pepper", "Lemonade", "Coffee", "Orange Juice");
-    static Order newOrder;
+
+    // List of available drink flavors
+    public static List<String> drinksFlavors = Arrays.asList(
+            "Coca-Cola", "Diet Coke", "Sprite", "Dr Pepper", "Lemonade",
+            "Coffee", "Orange Juice");
+
+    // Current order being processed
+    public static Order newOrder;
 
     public static void main(String[] args) {
-
-
-
         System.out.println("Welcome to Simply Sam’s Sandwich Society");
         homeScreen();
-   }
+    }
+
+    // Displays the home screen options for the user
     public static void homeScreen() {
         System.out.print("""
                 Home Screen:
                 1) New Order
                 0) Exit
-                
-                Please select an option:
-                """);
+                                 
+                Please select an option: """);
+
         int choice = keyboard.nextInt();
         switch (choice) {
-            case 1:
-                newOrder = new Order();
+            case 1 -> {
+                newOrder = new Order(); // Initialize a new order
                 orderScreenCommands();
-            case 0:
-                System.exit(0);
-            default:
-                System.out.println("Invalid choice, please try again.");
+            }
+            case 0 -> System.exit(0); // Exit the program
+            default -> System.out.print("Invalid choice, please try again.");
         }
     }
-    public static void orderScreenCommands() {
 
+    // Displays the order screen with commands for adding items
+    public static void orderScreenCommands() {
         boolean isRunning = true;
 
-        while(isRunning) {
-
+        while (isRunning) {
             System.out.print("""
+                    What would you like to do today
                     Order Screen:
                     1) Add Sandwich
                     2) Add Drink
@@ -54,178 +81,170 @@ public class Main {
                     4) Checkout
                     0) Cancel Order
                     
-                    Please select from the following:
-                    """);
-            int choice = keyboard.nextInt();
-            switch (choice) {
-                case 1 -> addSandwichCommand();
-                case 2 -> addDrink();
-                case 3 -> addChips();
-                case 4 -> checkout();
-                case 0 -> {homeScreen();
-                    isRunning =false;}
+                    Please select from the following: """);
 
+            int choice = keyboard.nextInt();
+
+            keyboard.nextLine();
+
+            switch (choice) {
+                case 1 -> addSandwichCommand(); // Adds a sandwich to the order
+                case 2 -> addDrink(); // Adds a drink to the order
+                case 3 -> addChips(); // Adds chips to the order
+                case 4 -> checkout(); // Proceeds to checkout
+                case 0 -> {
+                    homeScreen(); // Returns to home screen
+                    isRunning = false;
+                }
                 default -> System.out.println("Invalid choice, please try again.");
             }
         }
     }
+
+    // Adds a sandwich to the current order
     public static void addSandwichCommand() {
         Sandwich sandwich = new Sandwich();
-        // SIZE
-        System.out.println("Select a sandwich size: " + SandwichSizePrices.keySet());
-        String sandwichSize = keyboard.nextLine();
+
+        MenuItem.displaySandwichSizesAndPrices();
+        System.out.print("Select a sandwich size: " + SandwichSizePrices.keySet() + " ");
+        String sandwichSize = keyboard.nextLine().trim();
+
         if (SandwichSizePrices.containsKey(sandwichSize)) {
-            System.out.println("Selected size: " + sandwichSize);
+            System.out.println("Selected size: " + sandwichSize + " ");
             sandwich.setSize(Integer.parseInt(sandwichSize));
         } else {
             System.out.println("Invalid size selected.");
         }
-        //BREAD
-        System.out.println("Select your type of bread");
-        allToppings.displayBread();
 
+        // Prompt for selecting bread type
+        System.out.print("Select your type of bread: ");
+        allToppings.displayBread();
         int breadSelection = Integer.parseInt(keyboard.nextLine());
 
-        switch (breadSelection) {
-            case 1 -> sandwich.setBreadType(allToppings.getBreadType().get(0));
+        sandwich.setBreadType(allToppings.getBreadType().get(breadSelection - 1));
+        System.out.println("You selected: " + allToppings.getBreadType().get(breadSelection - 1) + " ");
 
-            case 2 -> sandwich.setBreadType(allToppings.getBreadType().get(1));
-
-            case 3 -> sandwich.setBreadType(allToppings.getBreadType().get(2));
-
-            case 4 -> sandwich.setBreadType(allToppings.getBreadType().get(3));
-        }
-        System.out.println("You selected: " + allToppings.getBreadType().get(breadSelection-1));
-
-        System.out.println("What is your protein selection: ");
-        System.out.println("if you would like multiple, separate choices by commas");
+        displayProteins();
+        // Prompt for selecting protein toppings
+        System.out.print("What is your protein selection: ");
         allToppings.displayProtein();
-        String [] meatSelected = keyboard.nextLine().split(",");
+        String[] meatSelected = keyboard.nextLine().split(",");
         sandwich.setProtein(addProtein(meatSelected));
 
-        System.out.println("What type of cheese would you like to add to your sandwich?");
-        System.out.println("If you'd like multiple, please separate your choices by commas");
-        allToppings.dislayCheese();
+        // Prompt for selecting cheese
+        System.out.print("What type of cheese would you like to add to your sandwich: ");
+        displayCheeses();
         String[] cheeseSel = keyboard.nextLine().split(",");
         sandwich.setCheese(addCheese(cheeseSel));
 
-
-
-        System.out.println("What veggies would you like to add to your sandwich?");
-        System.out.println("If you'd like multiple, please separate your choices by commas");
-        allToppings.displayVeggies();
+        // Prompt for selecting veggies
+        System.out.print("What veggies would you like to add to your sandwich: ");
+        displayVeggies();
         String[] vegSel = keyboard.nextLine().split(",");
         sandwich.setVeggies(addVeggies(vegSel));
 
-
-        System.out.println("What kind of sauces would you like would you like to add to your sandwich?");
-        System.out.println("If you'd like multiple, please separate your choices by commas");
-        allToppings.displaySauce();
+        // Prompt for selecting sauces
+        System.out.print("What kind of sauces would you like to add to your sandwich: ");
+        displaySauces();
         String[] saucesSel = keyboard.nextLine().split(",");
-        sandwich.setVeggies(addSauces(saucesSel));
+        sandwich.setSauces(addSauces(saucesSel));
 
-
-        newOrder.addItem(sandwich);
+        newOrder.addItem(sandwich); // Add the sandwich to the order
     }
-    public static void addDrink(){
-        System.out.println("Select the drink flavor you want.");
 
-        for(String drink: drinksFlavors){
+    // Adds a drink to the current order
+    public static void addDrink() {
+        displayDrinks();
+        System.out.print("Select the drink flavor you want: ");
+        for (String drink : drinksFlavors) {
             System.out.println(drink);
         }
-
-        String drinkFlavor = keyboard.nextLine();
-        System.out.println(drinkSizePrices);
-        System.out.println("What size drink would you like: ");
+        String drinkFlavor = keyboard.nextLine().trim();
+        System.out.print("What size drink would you like: ");
         String drinkSize = keyboard.nextLine().trim();
 
-        if(drinkSizePrices.containsKey(drinkSize)){
-            System.out.println("You selected size: "+ drinkSize);
-            Drink drink = new Drink(drinkFlavor,drinkSize, drinkSizePrices.get(drinkSize));
-          newOrder.addItem(drink);
+        if (drinkSizePrices.containsKey(drinkSize)) {
+            System.out.print("You selected size: " + drinkSize + " ");
+            Drink drink = new Drink(drinkFlavor, drinkSize, drinkSizePrices.get(drinkSize));
+            newOrder.addItem(drink); // Add the drink to the order
         } else {
-
             System.out.println("Invalid size selection");
         }
     }
-    public static void addChips(){
-        List<String> chipsArr = new ArrayList<>(); // move this to the chips class, or sides
+
+    // Adds chips to the current order
+    public static void addChips() {
+        MenuItem.displaySides();
         allsides.displayChips();
-        System.out.println("What kind of chips would you like: ");
-
-        int chipSelected = keyboard.nextInt();
-        //int index = Integer.parseInt(chipSelected) - 1;
-       // Sides chips =  new Sides(chipsArr.get(index));
-
-       // newOrder.addItem(chips);
-
+        System.out.print("What kind of chips would you like: ");
+        String chipSelected = keyboard.nextLine().trim();
+        Sides chips = new Sides(chipSelected);
+        newOrder.addItem(chips); // Add chips to the order
     }
 
-    public static ArrayList<String> addVeggies(String[] selectionsArr){
-        ArrayList veggies = new ArrayList<>();
-
-        for(String selectVegNum: selectionsArr){
-            String topping = allToppings.getVeggies().get(Integer.parseInt(selectVegNum)-1);
+    // Adds selected veggies to the sandwich
+    public static ArrayList<String> addVeggies(String[] selectionsArr) {
+        ArrayList<String> veggies = new ArrayList<>();
+        for (String selectVegNum : selectionsArr) {
+            String topping = allToppings.getVeggies().get(Integer.parseInt(selectVegNum) - 1);
             veggies.add(topping);
         }
-
-           return veggies;
+        return veggies;
     }
 
-    public static ArrayList<String> addProtein(String [] meatSellArr){
-        ArrayList meats = new ArrayList<>();
-
-        for (String selectedMeatNum: meatSellArr){
-            String meatToppings = allToppings.getMeatType().get(Integer.parseInt(selectedMeatNum)-1);
-            meats.add(meatToppings);
+    // Adds selected protein toppings to the sandwich
+    public static ArrayList<String> addProtein(String[] meatSelArr) {
+        ArrayList<String> meats = new ArrayList<>();
+        for (String selectedMeatNum : meatSelArr) {
+            String meatTopping = allToppings.getMeatType().get(Integer.parseInt(selectedMeatNum) - 1);
+            meats.add(meatTopping);
         }
         return meats;
     }
 
-    public static ArrayList<String> addCheese(String [] cheeseSelArr){
-        ArrayList cheese = new ArrayList<>();
-
-        for (String selCheeseNum: cheeseSelArr){
-            String cheeseToppings = allToppings.getCheeseType().get(Integer.parseInt(selCheeseNum)-1);
-            cheese.add(cheeseToppings);
+    // Adds selected cheese to the sandwich
+    public static ArrayList<String> addCheese(String[] cheeseSelArr) {
+        ArrayList<String> cheese = new ArrayList<>();
+        for (String selCheeseNum : cheeseSelArr) {
+            String cheeseTopping = allToppings.getCheeseType().get(Integer.parseInt(selCheeseNum) - 1);
+            cheese.add(cheeseTopping);
         }
         return cheese;
     }
-    public static ArrayList<String> addSauces(String [] saucesSelArr) {
-        ArrayList sauces = new ArrayList<>();
 
+    // Adds selected sauces to the sandwich
+    public static ArrayList<String> addSauces(String[] saucesSelArr) {
+        ArrayList<String> sauces = new ArrayList<>();
         for (String numOfSauce : saucesSelArr) {
             String sauceSelected = allToppings.getSauces().get(Integer.parseInt(numOfSauce) - 1);
             sauces.add(sauceSelected);
         }
         return sauces;
-
     }
 
-
-
-    //• Checkout - display the order details and the price --> create a list
-    public static void checkout(){
-
-        //o Confirm - create the receipt file and go back to the home screen --> write to csv file
-        //o Cancel - delete order and go back to the home screen
-
-        System.out.println(newOrder.getPrice());
-        for(MenuItem item: newOrder.getItems()){
+    // Finalizes the order and generates a receipt
+    public static void checkout() {
+        System.out.println("your total is $"+newOrder.getPrice());
+        for (MenuItem item : newOrder.getItems()) {
             item.displayItem();
+            System.out.println("your total is $"+newOrder.getPrice());
         }
+        writereceipt(newOrder); // Write the receipt to a file
         System.out.println("Returning to Home Screen");
         homeScreen();
     }
 
-    public static void writeReceipt(String orderDetails) {
-        try (FileWriter writer = new FileWriter("src/main/resources/receipt.csv", true)) {
-            writer.write(orderDetails);
+    // Writes the order receipt to a text file
+    public static void writereceipt(Order newOrder) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd-HH-mmss");
+        String date = formatter.format(LocalDateTime.now());
+        String filename = "src/main/resources/" + date + ".txt";
 
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(filename, true))) {
+            bufferedWriter.write(newOrder.toString());
+            bufferedWriter.write("\n");
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-
-
 }

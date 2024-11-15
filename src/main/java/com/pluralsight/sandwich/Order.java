@@ -15,22 +15,16 @@ public class Order implements CalculatePrice {
     private LocalDate date;
     private DateTimeFormatter formatter;
 
+    private int orderCounter = 0;
 
-    public void DateEncapsulation() {
-        this.date = LocalDate.now();
-        this.formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-    }
-
-    private int orderCounter =0;
     public Order() {
         this.orderId = orderCounter++;
         this.items = new ArrayList<>();
-        this.taxRate = 1+.06245;
+        this.taxRate = 6.25;
         this.storeName = "Simply Sam’s Sandwich Society";
         this.storeAddress = "543 Marie Curie Avenue\n" +
-                "Retroville, Tx 75449\n" +
+                "Retro ville, Tx 75449\n" +
                 "United States";
-        DateEncapsulation();
     }
 
     public int getOrderId() {
@@ -105,28 +99,35 @@ public class Order implements CalculatePrice {
         this.formatter = formatter;
     }
 
-    public void addItem(MenuItem item){
+    public void addItem(MenuItem item) {
         this.items.add(item);
     }
 
     @Override
     public double getPrice() {
-
-        for(MenuItem item: items){
+        totalAmount = 0;
+        for (MenuItem item : items) {
             totalAmount += item.getPrice();
         }
         return totalAmount;
     }
 
-    @Override
+    // method for formatting items
+    public String printMenuItems() {
+        StringBuilder itemList = new StringBuilder();
+        for (MenuItem item : items) {
+            itemList.append(item).append("\n"); // Assuming MenuItem has a toString method
+        }
+        return itemList.toString();
+    }
+
     public String toString() {
-        return
-                "orderId=" + orderId +
-                ", subtotal=" + totalAmount +
-                ", taxRate: " + taxRate +"%"+
-                ", totalAmount:" + totalAmount + taxRate +
-                ", storeName: " + storeName + '\'' +
-                ", storeAddress='" + storeAddress + '\'' +
-                ", date=" + date +
-                ", formatter=" + formatter;}
+        return "Store Name: " + storeName +
+                "\nStore Address: " + storeAddress +
+                "\nOrder ID: " + orderId +
+                "\nSubtotal: $" + totalAmount +
+                "\nTax Rate: " + taxRate + "%" +
+                "\nTotal Amount: $" + (totalAmount * (1 + taxRate / 100)) +
+                "\nItems:\n" + printMenuItems();
+    }
 }

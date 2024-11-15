@@ -2,6 +2,8 @@ package com.pluralsight.sandwich;
 
 import java.util.ArrayList;
 
+import static com.pluralsight.Main.keyboard;
+
 public class Sandwich extends MenuItem implements CalculatePrice{
    private int size;
    private String breadType;
@@ -15,6 +17,7 @@ public class Sandwich extends MenuItem implements CalculatePrice{
 
     //veggies
     private ArrayList<String> veggies = new ArrayList<>();
+    private ArrayList<String> sauce = new ArrayList<>();
 
    private boolean isToasted;
 
@@ -47,21 +50,6 @@ public class Sandwich extends MenuItem implements CalculatePrice{
         return isToasted;
     }
 
-    public void setToasted(boolean toasted) {
-        isToasted = toasted;
-    }
-
-    public ArrayList<String> getMeats() {
-        return meats;
-    }
-
-    public void setMeats(ArrayList<String> meats) {
-        this.meats = meats;
-    }
-
-    public ArrayList<String> getCheese() {
-        return cheese;
-    }
 
     public void setCheese(ArrayList<String> cheese) {
         this.cheese = cheese;
@@ -69,6 +57,10 @@ public class Sandwich extends MenuItem implements CalculatePrice{
 
     public ArrayList<String> getVeggies() {
         return veggies;
+    }
+
+    public void setSauces(ArrayList<String> sauce){
+       this.sauce = sauce;
     }
 
     public void setVeggies(ArrayList<String> veggies) {
@@ -79,13 +71,6 @@ public class Sandwich extends MenuItem implements CalculatePrice{
        this.meats = meats;
     }
 
-    public void removeTopping(CalculatePrice topping) {
-
-    }
-
-    public void calculateCost(){
-
-    }
 
     @Override
     public double getPrice() {
@@ -216,16 +201,24 @@ double total = 0;
         // you can also use this method to add the item or write then item to a receipt file
         System.out.println(this);
     }
+public boolean toasted(){
 
+    System.out.println("would you like your sandwich tasted? (y or n)");
+    String input = keyboard.nextLine().trim();
+    if(input.equalsIgnoreCase("Y")){
+        return true;
+    }
+    return false;
+}
 
     @Override
     public String toString() {
         return "Sandwich:" +
                 "size:" + size +
-                ", breadType:'" + breadType + '\'' +
-                ", meats:" + meats +
-                ", cheese:" + cheese +
-                ", veggies:" + veggies +
-                ", isToasted:" + isToasted;
+                " breadType:" + breadType + '\'' +
+                " meats:" + meats +
+                " cheese:" + cheese +
+                " veggies:" + veggies +
+                " Toasted:" + toasted();
     }
 }

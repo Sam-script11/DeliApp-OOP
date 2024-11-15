@@ -1,0 +1,11 @@
+Store Name: Simply Sam’s Sandwich Society
+Store Address: 543 Marie Curie Avenue
+Retro ville, Tx 75449
+United States
+Order ID: 0
+Subtotal: $7.5
+Tax Rate: 6.25%
+Total Amount: $7.96875
+Items:
+Sandwich:size:4 breadType:white' meats:[roast beef] cheese:[Provolone] veggies:[Mayo] Toasted:true
+
