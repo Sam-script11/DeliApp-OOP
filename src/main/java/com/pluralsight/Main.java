@@ -1,6 +1,7 @@
 package com.pluralsight;
 import com.pluralsight.sandwich.*;
 
+import javax.swing.*;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -43,7 +44,17 @@ public class Main {
     public static Order newOrder;
 
     public static void main(String[] args) {
-        System.out.println("Welcome to Simply Sam’s Sandwich Society");
+        ImageIcon image = new ImageIcon("src/main/image/Logo.PNG");
+        String [] homeButton = {"continue"};
+
+        String title = "Welcomes to SamScript Solutions";
+        JOptionPane.showOptionDialog(null,title,"Title",
+                JOptionPane.YES_NO_OPTION,JOptionPane.INFORMATION_MESSAGE,image,homeButton,1); // fromatting the home screen
+
+        String str = JOptionPane.showInputDialog("What is your name "); // used to create dialog box with the message on top of it
+        // System.out.println(str); // str takes the input on the dialog box and prints it to the terminal
+        JOptionPane.showOptionDialog(null,"Hello "+str,"Greetings",JOptionPane.YES_NO_OPTION,
+                JOptionPane.INFORMATION_MESSAGE,null,homeButton,1);
         homeScreen();
     }
 
@@ -127,6 +138,7 @@ public class Main {
         displayProteins();
         // Prompt for selecting protein toppings
         System.out.print("What is your protein selection: ");
+        displayProteins();
         allToppings.displayProtein();
         String[] meatSelected = keyboard.nextLine().split(",");
         sandwich.setProtein(addProtein(meatSelected));
@@ -134,18 +146,21 @@ public class Main {
         // Prompt for selecting cheese
         System.out.print("What type of cheese would you like to add to your sandwich: ");
         displayCheeses();
+        allToppings.dislayCheese();
         String[] cheeseSel = keyboard.nextLine().split(",");
         sandwich.setCheese(addCheese(cheeseSel));
 
         // Prompt for selecting veggies
         System.out.print("What veggies would you like to add to your sandwich: ");
         displayVeggies();
+        allToppings.displayVeggies();
         String[] vegSel = keyboard.nextLine().split(",");
         sandwich.setVeggies(addVeggies(vegSel));
 
         // Prompt for selecting sauces
         System.out.print("What kind of sauces would you like to add to your sandwich: ");
         displaySauces();
+        allToppings.displaySauce();
         String[] saucesSel = keyboard.nextLine().split(",");
         sandwich.setSauces(addSauces(saucesSel));
 
@@ -224,14 +239,22 @@ public class Main {
 
     // Finalizes the order and generates a receipt
     public static void checkout() {
-        System.out.println("your total is $"+newOrder.getPrice());
+
+        System.out.print("is your order correct?");
         for (MenuItem item : newOrder.getItems()) {
             item.displayItem();
-            System.out.println("your total is $"+newOrder.getPrice());
+            System.out.println("your total is $" + newOrder.getPrice());
         }
-        writereceipt(newOrder); // Write the receipt to a file
-        System.out.println("Returning to Home Screen");
-        homeScreen();
+        System.out.print("is your order correct? (yes or no)");
+        String input = keyboard.nextLine().trim();
+        if (input.equalsIgnoreCase("yes")) {
+            writereceipt(newOrder); // Write the receipt to a file
+            System.out.println("Returning to Home Screen");
+            homeScreen();
+        }
+        else {
+            homeScreen();
+        }
     }
 
     // Writes the order receipt to a text file
